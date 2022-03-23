@@ -39,11 +39,14 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        $validated = $request->validate([
+            'name' => 'required|string|min:2'
+        ]);
         $todo = new Todo();
-        $todo->name = $request->name;
+        $todo->name = $validated['name'];
         $todo->save();
 
-        return redirect('/todos')->with('status', 'New Todo ' . $request->name . ' Added');
+        return redirect('/todos')->with('status', 'New Todo ' . $validated['name'] . ' Added');
     }
 
     /**
@@ -79,11 +82,14 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
+        $validated = $request->validate([
+            'name' => 'required|string|min:2'
+        ]);
         // dd($request->all(), $todo);
-        $todo->name = $request->name;
+        $todo->name = $validated['name'];
         $todo->save();
 
-        return redirect('/todos')->with('status', 'Todo ' . $request->name . ' Updated');
+        return redirect('/todos')->with('status', 'Todo ' .  $validated['name'] . ' Updated');
     }
 
     /**
@@ -94,7 +100,6 @@ class TodoController extends Controller
      */
     public function destroy(Todo $todo)
     {
-        dd($todo);
         $todo->delete();
         return redirect('/todos');
     }
